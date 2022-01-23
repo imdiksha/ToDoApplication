@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <link rel="stylesheet" href="styleSheet.css" />
+    <script
+      src="https://kit.fontawesome.com/29ee0bc57e.js"
+      crossorigin="anonymous"
+    ></script>
+  </head>
+
+  <body>
+    <h1>To-Do List</h1>
+    <input type="text" id="txtTaskDes" placeholder="Type Here..." />
+    <input type="button" value="+" id="btnAddTask" onclick="addTaskToList();" />
+    <ul id="lstTask"></ul>
+  </body>
+
+  <script>
+    let todoListObj = [];
+    function addTaskToList() {
+      const taskDesc = document.getElementById("txtTaskDes");
+
+      if (taskDesc.value == null || taskDesc.value == "") {
+        alert("Please Enter Task description.");
+      } else {
+        const addedTaskObj = {
+          id: taskDesc.value.length,
+          text: taskDesc.value,
+          isCompleted: false,
+        };
+        todoListObj.push(addedTaskObj);
+        this.displayTask();
+        document.getElementById("txtTaskDes").value = "";
+      }
+    }
+
+    function deleteTask(id) {
+      const index = todoListObj.findIndex((item) => item.id == id);
+      todoListObj.splice(index, 1);
+      this.displayTask();
+    }
+
+    function isTaskCompleted(id) {
+      const index = todoListObj.findIndex((item) => item.id == id);
+     if( todoListObj[index].isCompleted == false)
+     todoListObj[index].isCompleted=true;
+     else
+     todoListObj[index].isCompleted=false;
+
+      this.displayTask();
+    }
+
+    function displayTask() {
+      const ulElement = document.getElementById("lstTask");
+      ulElement.innerHTML = "";
+      todoListObj.forEach((element) => {
+        const listElement = document.createElement("li");
+        const removeButton = document.createElement("i");
+        listElement.innerText = element.text;
+
+        listElement.setAttribute("data-id", element.id);
+        removeButton.setAttribute("data-id", element.id);
+
+        removeButton.classList.add("far", "fa-trash-alt");
+
+        listElement.id = element.id;
+        removeButton.id = element.id;
+        listElement.appendChild(removeButton);
+
+        removeButton.addEventListener("click", function (e) {
+          const id = e.target.getAttribute("data-id");
+          deleteTask(id);
+        });
+
+        listElement.addEventListener("click", function (e) {
+          const id = e.target.getAttribute("data-id");
+          isTaskCompleted(id);
+        });
+
+        if (element.isCompleted) {
+          listElement.classList.add("checked");
+        }
+    
+
+        ulElement.appendChild(listElement);
+      });
+    }
+    
+  </script>
+</html>
